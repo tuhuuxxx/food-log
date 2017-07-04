@@ -72,7 +72,7 @@ export default new Router({
     },
     {
       path: '/checkForm',
-      name: '/CheckForm',
+      name: 'CheckForm',
       component: CheckForm
     }
   ]

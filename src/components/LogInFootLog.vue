@@ -5,17 +5,17 @@
            <p> Skymapdev</p>
         </el-col>
     </el-row>
-    <el-form :model="form" label-width="100px">
-        <el-form-item label="Username" prop="email">
-            <el-input placeholder="Enter Username">
+    <el-form  label-width="100px">
+        <el-form-item label="Username" >
+            <el-input type="email" placeholder="Enter Username" v-model="email">
             </el-input>
         </el-form-item>
-        <el-form-item label="Password" prop="password">
-            <el-input placeholder="Enter Password">
+        <el-form-item label="Password" >
+            <el-input type="password" placeholder="Enter Password" v-model="password">
             </el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary">OK</el-button>
+            <el-button @click="submitLogIn" type="primary">OK</el-button>
         </el-form-item>
     </el-form>
     <p class="support">Bạn chưa có tài khoản Skymapdev? Đăng kí<a src="#" style="color:blue"> tại đây</a></p>
@@ -29,10 +29,26 @@
 
     data () {
       return {
-        form: {
-          email: '',
-          password: ''
-        }
+        email: '',
+        password: '',
+        value: ''
+      }
+    },
+
+    methods: {
+      submitLogIn () {
+        const api = `/api/authenticate`
+        this.axios.post(api, {
+          email: this.email,
+          password: this.password
+        }).then(response => {
+          window.localStorage.setItem('token', response.data.token)
+          console.log(response.data.token)
+
+          this.$router.replace('/checkForm')
+        }).catch(error => {
+          console.log(error)
+        })
       }
     }
   }
