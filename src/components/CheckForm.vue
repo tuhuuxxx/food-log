@@ -9,7 +9,7 @@
       <el-radio  v-model="radio" label="Show Eat">Show Eat</el-radio>
       <el-radio  v-model="radio" label="Show Not Eat">Show Not Eat</el-radio>
    </el-row>
-
+    <!--
    <el-row class="addBox" >
      <el-col :span="18">
        <el-input placeholder="Enter name" v-model="personAdded"></el-input>
@@ -18,7 +18,7 @@
        <el-button type="success" @click="addPerson">Add</el-button>
      </el-col>
    </el-row>
-
+   -->
    <div class="bodyBox">
      <el-row v-for="person of handledPeopleData" :key="person.id">
         <el-col :span="16" class="checkbox">  
@@ -70,8 +70,9 @@ export default {
   },
 
   methods: {
+    /*
     addPerson () {
-      if (this.personAdded === '') {
+      if (!this.personAdded) {
         alert('Error!')
       } else {
         this.people.push({
@@ -81,6 +82,7 @@ export default {
         this.personAdded = ''
       }
     },
+    */
     deletePerson (person) { // xoa person.name trong checkedPerson, xoa person trong people
       let indexOfName = this.checkedPerson.indexOf(person.name)
       if (indexOfName > -1) {
