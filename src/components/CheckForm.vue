@@ -53,8 +53,14 @@
      </el-form>
    </el-row>
   
-  <el-dialog :visible.sync="detailVisible" title="Show Detail">
-    {{selectedPerson.name}} - {{selectedPerson.info}}
+  <el-dialog :visible.sync="detailVisible">{{selectedPerson.name}}
+    <el-table :data="detailTable" style="margin-top:20px;width: 100%"> 
+      <el-table-column prop="date" label="Date" header-align="center">
+      </el-table-column>
+      <el-table-column prop="price" label="Price" header-align="center">
+      </el-table-column>
+    </el-table>
+    <b><p>Payment : {{payment}}</p></b>
   </el-dialog>
 </div>
 </template>
@@ -70,7 +76,9 @@ export default {
       checkedDate: [],
       detailVisible: false,
       people: [],
-      selectedPerson: {}
+      selectedPerson: {},
+      detailTable: [],
+      payment: 0
     }
   },
 
@@ -103,8 +111,8 @@ export default {
         if (this.checkedPerson.indexOf(person) === -1) {
           this.checkedPerson.push(person)
         } else {
-          let indexOfDate = this.checkedPerson.indexOf(person)
-          this.checkedPerson.splice(indexOfDate, 1)
+          let indexOfPersonChange = this.checkedPerson.indexOf(person)
+          this.checkedPerson.splice(indexOfPersonChange, 1)
         }
       }
     },
@@ -116,6 +124,21 @@ export default {
       this.checkedPerson = []
     },
     showDetail (person) {
+      const token = window.localStorage.getItem('token')
+      this.axios({
+        url: `/api/foodlog/${person.id}`,
+        method: 'get',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      })
+      .then(res => {
+        this.detailTable = res.data.data
+        this.payment = this.detailTable.reduce((total, data) => total + data.price, 0)
+      })
+      .catch(err => {
+        console.log(err)
+      })
       this.selectedPerson = person
       this.detailVisible = true
     },
