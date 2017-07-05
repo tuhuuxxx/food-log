@@ -34,7 +34,7 @@
 
   <el-row>
     <el-form>
-    <el-button  @click="submitForm" type="primary" style="float:right; margin-right:20px; margin-bottom:20px;">
+    <el-button :loading="submiting" @click="submitForm" type="primary" style="float:right; margin-right:20px; margin-bottom:20px;">
       Submit
     </el-button>
     </el-form>
@@ -68,7 +68,8 @@ export default {
       people: [],
       selectedPerson: {},
       detailTable: [],
-      payment: 0
+      payment: 0,
+      submiting: false
     }
   },
 
@@ -127,11 +128,13 @@ export default {
       this.detailVisible = true
     },
     submitForm () {
+      this.submiting = true
       api.request('post', '/api/foodlog', {
         users: this.checkedPerson,
         date: this.dateValue
       })
         .then(res => {
+          this.submiting = false
           this.$notify({
             title: 'Success',
             message: res.data.message,
@@ -139,6 +142,7 @@ export default {
           })
         })
         .catch(error => {
+          this.submiting = false
           console.log(error)
         })
     },
