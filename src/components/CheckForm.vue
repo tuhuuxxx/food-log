@@ -1,62 +1,49 @@
 <template>
 <div class="root">
-   <el-row>
+  <el-row>
     <el-date-picker  class="dateTime" v-model="dateValue" type="date" placeholder="Pick a day" @change="handleDatePicker(dateValue)">
     </el-date-picker>
-   </el-row>
-   <el-row >
-      <el-col :span="8">
-        <el-radio  v-model="radio" label="Show All">Show All</el-radio>
-      </el-col>
-      <el-col :span="8">
-         <el-radio  v-model="radio" label="Show Eat">Show Eat</el-radio>
-      </el-col>
-      <el-col :span="8">
-        <el-radio  v-model="radio" label="Show Not Eat">Show Not Eat</el-radio>
-      </el-col>
-   </el-row>
-    <!--
-   <el-row class="addBox" >
-     <el-col :span="18">
-       <el-input placeholder="Enter name" v-model="personAdded"></el-input>
-     </el-col>
-     <el-col :span="6">
-       <el-button type="success" @click="addPerson">Add</el-button>
-     </el-col>
-   </el-row>
-   -->
-   <div class="bodyBox">
-     <el-row v-for="person of handledPeopleData" :key="person.id" >
-        <el-col :span="16" class="checkbox">  
-          <el-checkbox :value="inCheckedPeople(person)" @change="handleClickCheckbox(person)" :label="person.name" ></el-checkbox>
-        </el-col>
-        <el-col :span="2">
-          <el-button size="small" class="el-icon-edit" @click="showDetail(person)">
-          </el-button>
-        </el-col>
-        <el-col :span="2" :offset="2" >
-          <el-button size="small" class="el-icon-delete" @click="deletePerson(person)">
-          </el-button>
-        </el-col>
-    </el-row>
-   </div>
+  </el-row>
 
-   <el-row class="footer">
-      <el-col :span="14">Chosen People: <i style="color:red">{{checkedPerson.length}}</i></el-col>
-      <el-col :span="10">Fee: <i style="color:red">{{ checkedPerson.length * 30 * 1000 | currency }} VNĐ</i></el-col>
-    </el-row>
-   <el-row>
-     <el-form>
-      <el-button  @click="submitForm" type="primary" style="float:right; margin-right:20px; margin-bottom:20px;">
-        Submit
-      </el-button>
-     </el-form>
-   </el-row>
+  <div class="filter-controls">
+    <el-radio  v-model="radio" label="Show All">Show All</el-radio>
+    <el-radio  v-model="radio" label="Show Eat">Show Eat</el-radio>
+    <el-radio  v-model="radio" label="Show Not Eat">Show Not Eat</el-radio>
+  </div>
+
+  <div class="bodyBox">
+    <el-row v-for="person of handledPeopleData" :key="person.id" >
+      <el-col :span="16" class="checkbox">  
+        <el-checkbox :value="inCheckedPeople(person)" @change="handleClickCheckbox(person)" :label="person.name" ></el-checkbox>
+      </el-col>
+      <el-col :span="2">
+        <el-button size="small" class="el-icon-edit" @click="showDetail(person)">
+        </el-button>
+      </el-col>
+      <el-col :span="2" :offset="2" >
+        <el-button size="small" class="el-icon-delete" @click="deletePerson(person)">
+        </el-button>
+      </el-col>
+  </el-row>
+  </div>
+
+  <div class="footer">
+    <div :span="14">Chosen People: <i style="font-size: 20px; color: red">{{checkedPerson.length}}</i></div>
+    <div :span="10">Fee: <i style="font-size: 20px; color: red">{{ checkedPerson.length * 30 * 1000 | currency }} VNĐ</i></div>
+  </div>
+
+  <el-row>
+    <el-form>
+    <el-button  @click="submitForm" type="primary" style="float:right; margin-right:20px; margin-bottom:20px;">
+      Submit
+    </el-button>
+    </el-form>
+  </el-row>
   
   <el-dialog size="large" :visible.sync="detailVisible">
     <div><b>User: </b>{{ selectedPerson.name }} </div>
     <p class="total-text">Total : <b>{{ (payment * 1000) | currency }} VND</b></p>
-    <el-table :data="detailTable" style="margin-top:20px; width: 100%"> 
+    <el-table :height="300" :data="detailTable" style="margin-top:20px; width: 100%"> 
       <el-table-column prop="date" label="Date" width="" header-align="center">
       </el-table-column>
       <el-table-column prop="price" label="Price" header-align="center">
@@ -202,14 +189,17 @@ export default {
 
 <style scoped>
 .root{
-    border:1px solid black;
-    width:80%;
-    margin:auto;
+    border:1px solid rgba(0, 0, 0, 0.3);
+    width: 60%;
+    margin: 0 auto 20px;
+    background: white;
+    border-radius: 10px;
 }
 
 @media (max-width: 768px) {
   .root{
-    width: 100%;
+    width: auto;
+    margin: 0 10px 20px;
   }
 } 
 
@@ -219,23 +209,26 @@ export default {
 .addBox{
   margin-left:20px;
 }
-.bodyBox{
+.bodyBox {
    margin:20px;
-   border:1px solid lightgrey;
+   border:1px solid rgba(0, 0, 0, 0.3);
    text-align: left;
-   height: 250px;
-   overflow-y:scroll;
+   overflow-y: scroll;
+   height: 200px;
+   border-radius: 10px;
 }
 .checkbox{
     margin-top:5px;
     margin-left:15px;
     float:left;
 }
-.footer{
+
+.footer {
   margin:20px; 
-  text-align: left;
-  font-weight:500;
+  display: flex;
+  justify-content: space-between;  
 }
+
 .dateTime{
   float:left;
   margin:20px;
@@ -247,5 +240,10 @@ export default {
 
 .total-text b {
   font-size: 20px;
+}
+
+.filter-controls {
+  display: flex;
+  justify-content: space-around;
 }
 </style>

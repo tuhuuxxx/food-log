@@ -10,6 +10,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import './filters'
 
+import './assets/css/app.css'
+
 Vue.config.productionTip = false
 Vue.use(ElementUI, {locale})
 Vue.use(VueAxios, axios)

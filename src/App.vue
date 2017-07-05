@@ -21,7 +21,14 @@ export default {
 }
 
 .logo {
-  width: 146px;
-  margin: 20px;
+  width: 120px;
+  margin: 10px;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    width: 96px;
+    margin: 5px;
+  }
 }
 </style>
