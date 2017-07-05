@@ -43,7 +43,7 @@
 
    <el-row class="footer">
       <el-col :span="14">Chosen People: <i style="color:red">{{checkedPerson.length}}</i></el-col>
-      <el-col :span="10">Fee: <i style="color:red">{{checkedPerson.length*30}} 000 VNĐ</i></el-col>
+      <el-col :span="10">Fee: <i style="color:red">{{ checkedPerson.length * 30 * 1000 | currency }} VNĐ</i></el-col>
     </el-row>
    <el-row>
      <el-form>
@@ -53,18 +53,21 @@
      </el-form>
    </el-row>
   
-  <el-dialog :visible.sync="detailVisible">{{selectedPerson.name}}
-    <el-table :data="detailTable" style="margin-top:20px;width: 100%"> 
-      <el-table-column prop="date" label="Date" header-align="center">
+  <el-dialog size="large" :visible.sync="detailVisible">
+    <div><b>User: </b>{{ selectedPerson.name }} </div>
+    <p class="total-text">Total : <b>{{ (payment * 1000) | currency }} VND</b></p>
+    <el-table :data="detailTable" style="margin-top:20px; width: 100%"> 
+      <el-table-column prop="date" label="Date" width="" header-align="center">
       </el-table-column>
       <el-table-column prop="price" label="Price" header-align="center">
       </el-table-column>
     </el-table>
-    <b><p>Payment : {{payment}}</p></b>
   </el-dialog>
 </div>
 </template>
 <script>
+import api from '@/api'
+
 export default {
   name: 'checkForm',
 
@@ -124,43 +127,33 @@ export default {
       this.checkedPerson = []
     },
     showDetail (person) {
-      const token = window.localStorage.getItem('token')
-      this.axios({
-        url: `/api/foodlog/${person.id}`,
-        method: 'get',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      })
-      .then(res => {
-        this.detailTable = res.data.data
-        this.payment = this.detailTable.reduce((total, data) => total + data.price, 0)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      api.request('get', `/api/foodlog/${person.id}`)
+        .then(res => {
+          this.detailTable = res.data.data
+          this.payment = this.detailTable.reduce((total, data) => total + data.price, 0)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
       this.selectedPerson = person
       this.detailVisible = true
     },
     submitForm () {
-      const token = window.localStorage.getItem('token')
-      this.axios({
-        url: '/api/foodlog',
-        method: 'post',
-        data: {
-          users: this.checkedPerson,
-          date: this.dateValue
-        },
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
+      api.request('post', '/api/foodlog', {
+        users: this.checkedPerson,
+        date: this.dateValue
       })
-      .then(res => {
-        console.log(res)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        .then(res => {
+          this.$notify({
+            title: 'Success',
+            message: res.data.message,
+            type: 'success'
+          })
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     inCheckedPeople (person) {
       return this.checkedPerson.indexOf(person) >= 0
@@ -195,13 +188,7 @@ export default {
 
     if (!token) return
 
-    this.axios({
-      url: '/api/users',
-      method: 'get',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    })
+    api.request('get', '/api/users')
       .then(res => {
         const users = res.data.data
         this.people = users
@@ -219,6 +206,13 @@ export default {
     width:80%;
     margin:auto;
 }
+
+@media (max-width: 768px) {
+  .root{
+    width: 100%;
+  }
+} 
+
 .el-row{
   margin-top:20px;
 }
@@ -245,5 +239,13 @@ export default {
 .dateTime{
   float:left;
   margin:20px;
+}
+
+.total-text {
+  color: red;
+}
+
+.total-text b {
+  font-size: 20px;
 }
 </style>

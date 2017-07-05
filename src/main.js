@@ -8,6 +8,7 @@ import locale from 'element-ui/lib/locale/lang/en'
 import 'element-ui/lib/theme-default/index.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import './filters'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI, {locale})

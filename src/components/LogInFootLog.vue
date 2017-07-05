@@ -45,7 +45,7 @@
           window.localStorage.setItem('token', response.data.token)
           console.log(response.data.token)
 
-          this.$router.replace('/checkForm')
+          this.$router.replace('/')
         }).catch(error => {
           console.log(error)
         })
